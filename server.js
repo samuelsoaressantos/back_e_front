@@ -23,12 +23,6 @@ db.connect((err) => {
     console.log('Conectado ao MySQL!');
 });
 
-// Simulação de usuários (login)
-const users = [
-    { nome: 'admin', senha: '1234' },
-    { nome: 'usuario', senha: 'abcd' }
-];
-
 // Rota de login
 app.post('/login', (req, res) => {
     const { nome, senha } = req.body;
@@ -68,6 +62,30 @@ app.post('/vote', (req, res) => {
     } else {
         res.status(400).send({ message: 'Ação inválida' });
     }
+});
+
+// Rota para adicionar um comentário
+app.post('/comment', (req, res) => {
+    const { post_id, usuario, texto } = req.body;
+    
+    if (!post_id || !usuario || !texto) {
+        return res.status(400).json({ success: false, message: 'Todos os campos são obrigatórios!' });
+    }
+    
+    db.query('INSERT INTO comentarios (post_id, usuario, texto) VALUES (?, ?, ?)', [post_id, usuario, texto], (err, result) => {
+        if (err) throw err;
+        res.json({ success: true, message: 'Comentário adicionado!' });
+    });
+});
+
+// Rota para buscar comentários de um post
+app.get('/comments', (req, res) => {
+    const { post_id } = req.query;
+    
+    db.query('SELECT * FROM comentarios WHERE post_id = ? ORDER BY data DESC', [post_id], (err, results) => {
+        if (err) throw err;
+        res.send(results);
+    });
 });
 
 app.listen(PORT, () => {
