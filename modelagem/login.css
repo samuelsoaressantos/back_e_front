@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+        height: 100%;
+}
+
+.sidebar {
+    position: fixed;   /* Fixa a sidebar na tela */
+    top: 0;            /* Alinha ao topo */
+    left: 0;           /* Alinha à esquerda */
+    width: 250px;      /* Define uma largura fixa */
+    height: 100vh;     /* Ocupa toda a altura da tela */
+    background: #fff;  /* Cor de fundo */
+    padding: 20px;     /* Espaçamento interno */
+    text-align: center; /* Centraliza o conteúdo */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra leve */
+}
+
+.logo {
+    margin-bottom: 5px;
+    padding-bottom: -15px; 
+    border-bottom: 3px solid#052272; 
+    
+}
+
+
+.content {
+    width: 60%;
+    margin: 20px auto;
+    flex: 1; /* Faz o conteúdo expandir e empurrar o footer para o final */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post {
+    
+        width: 80%;  /* Reduz a largura para 80% do container */
+        max-width: 600px;  /* Define um tamanho máximo para os posts */
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px auto;  /* Centraliza os posts na tela */
+        border-radius: 5px;
+    
+}
+
+.post img {
+    display: block;
+    margin: 0 auto;
+    width: 80%;  /* Reduz a largura para 80% do container */
+    max-width: 800px;  /* Limita o tamanho máximo */
+    height: auto;
+    border-radius: 5px;
+}
+
+
+.btn {
+    background: rgb(0, 0, 0);
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+footer {
+    background-color: #052272;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    position: relative; /* Mantém o footer no fluxo normal da página */
+    bottom: 0;
+}
+
+.msamuel {
+    margin-left: 1000px;
+    margin-top: -50px;
+    background-color: #052272; /* Muda a cor do fundo */
+    color: white; /* Muda a cor do texto */
+}
+.msamuel .btn-primary {
+    background-color: #052272; /* Cor de fundo */
+    border-color: #052272; /* Cor da borda (se necessário) */
+    color: white; /* Cor do texto */
+}
+
+.msamuel .btn-primary:hover {
+    background-color: #052272; /* Cor de fundo ao passar o mouse */
+    border-color: #052272; /* Cor da borda ao passar o mouse */
+}
+
+
+
