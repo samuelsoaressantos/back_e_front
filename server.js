@@ -1,93 +1,84 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+import express from 'express';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import mysql from 'mysql2/promise';
+
+// Carregar variáveis de ambiente do arquivo .env
+dotenv.config();
+
+// Conexão com o banco de dados
+const db = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'Z5R2M9IQ', // Substitua pela sua senha real
+  database: 'postagem',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+const JWT_SECRET = process.env.JWT_SECRET || 'ipabinha';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Conexão com o MySQL
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234', // Substitua com sua senha MySQL
-    database: 'sabor_do_brasil'
-});
+// Rota de Login (autenticação)
+app.post('/login', async (req, res) => {
+  const { email, senha } = req.body;
 
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Conectado ao MySQL!');
-});
-
-// Rota de login
-app.post('/login', (req, res) => {
-    const { nome, senha } = req.body;
-    
-    db.query('SELECT * FROM usuarios WHERE nome = ? AND senha = ?', [nome, senha], (err, results) => {
-        if (err) throw err;
-        if (results.length > 0) {
-            res.json({ success: true, message: 'Login bem-sucedido!' });
-        } else {
-            res.status(401).json({ success: false, message: 'Usuário ou senha incorretos!' });
-        }
-    });
-});
-
-// Rota para carregar posts
-app.get('/posts', (req, res) => {
-    db.query('SELECT * FROM postagens', (err, results) => {
-        if (err) throw err;
-        res.send(results);
-    });
-});
-
-// Rota para votação
-app.post('/vote', (req, res) => {
-    const { post_id, action } = req.body;
-    
-    if (action === 'like') {
-        db.query('UPDATE postagens SET likes = likes + 1 WHERE id = ?', [post_id], (err, result) => {
-            if (err) throw err;
-            res.send({ message: 'Like registrado!' });
-        });
-    } else if (action === 'dislike') {
-        db.query('UPDATE postagens SET dislikes = dislikes + 1 WHERE id = ?', [post_id], (err, result) => {
-            if (err) throw err;
-            res.send({ message: 'Dislike registrado!' });
-        });
-    } else {
-        res.status(400).send({ message: 'Ação inválida' });
+  try {
+    // Verificar se o email existe no banco de dados
+    const [rows] = await db.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
     }
-});
 
-// Rota para adicionar um comentário
-app.post('/comment', (req, res) => {
-    const { post_id, usuario, texto } = req.body;
-    
-    if (!post_id || !usuario || !texto) {
-        return res.status(400).json({ success: false, message: 'Todos os campos são obrigatórios!' });
+    const user = rows[0];
+
+    // Verificar se a senha é válida
+    const senhaValida = await bcrypt.compare(senha, user.senha);
+    if (!senhaValida) {
+      return res.status(400).json({ message: 'Senha incorreta' });
     }
-    
-    db.query('INSERT INTO comentarios (post_id, usuario, texto) VALUES (?, ?, ?)', [post_id, usuario, texto], (err, result) => {
-        if (err) throw err;
-        res.json({ success: true, message: 'Comentário adicionado!' });
-    });
+
+    // Gerar o token JWT
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+
+    // Retornar a resposta com o token
+    res.status(200).json({ message: 'Login realizado com sucesso', token });
+  } catch (err) {
+    console.error('Erro no login:', err);
+    res.status(500).json({ error: 'Erro no servidor, tente novamente' });
+  }
 });
 
-// Rota para buscar comentários de um post
-app.get('/comments', (req, res) => {
-    const { post_id } = req.query;
-    
-    db.query('SELECT * FROM comentarios WHERE post_id = ? ORDER BY data DESC', [post_id], (err, results) => {
-        if (err) throw err;
-        res.send(results);
-    });
+// Middleware para verificar o token JWT nas rotas privadas
+function verificarToken(req, res, next) {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(403).json({ message: 'Token não fornecido' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.id; // Pode adicionar o ID do usuário ao request
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Token inválido ou expirado' });
+  }
+}
+
+// Rota protegida (private)
+app.get('/private', verificarToken, (req, res) => {
+  res.status(200).json({ message: 'Você tem acesso à rota privada', userId: req.userId });
 });
 
+// Iniciar o servidor
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
