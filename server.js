@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import mysql from 'mysql2/promise';
+import path from 'path';  // Módulo path para manipulação de caminhos de diretórios
+import { fileURLToPath } from 'url'; // Módulo para trabalhar com URL no contexto de módulos ES
+
 
 // Carregar variáveis de ambiente do arquivo .env
 dotenv.config();
@@ -22,6 +25,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'ipabinha';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Obtém o diretório atual do arquivo com import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Servir arquivos estáticos da pasta 'front'
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
