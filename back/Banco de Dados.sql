@@ -5,7 +5,8 @@ USE postagem;
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL
+    senha VARCHAR(255) NOT NULL,
+    email VARCHAR (255) NOT NULL
 );
 
 -- Tabela de Posts
@@ -36,8 +37,8 @@ CREATE TABLE votos (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
-INSERT INTO usuarios (nome, senha) VALUES
-('admin@admin', '1234');
+INSERT INTO usuarios (nome, senha, email) VALUES
+('admin', '1234', 'admin@admin');
 INSERT INTO posts (titulo, imagem, localizacao) VALUES
 ('Prato Típico Mineiro', 'prato_mineiro.jpg', 'Belo Horizonte - MG'),
  ('Feijoada Completa', 'feijoada.jpg', 'Rio de Janeiro - RJ');

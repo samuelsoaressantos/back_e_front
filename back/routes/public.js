@@ -2,6 +2,9 @@ import express from 'express';
 import mysql from 'mysql2/promise';  
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import loginRoutes from './routes/cadastro.js'; // Importando as rotas de cadastro
+import loginRoutes from './routes/login.js'; // Importando as rotas de login
+import privateRoutes from './routes/private.js'; // Importando as rotas privadas
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "ipabinha"; // Usando o JWT_SECRET para ambas as operações

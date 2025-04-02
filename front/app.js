@@ -30,7 +30,7 @@ async function sendRequest(url, data) {
     const senha = document.getElementById('senha-cadastro').value;
   
     try {
-      const response = await sendRequest('http://localhost:5000/cadastro', { nome, email, senha });
+      const response = await sendRequest('http://localhost:3000/cadastro', { nome, email, senha });
       document.getElementById('mensagem-cadastro').textContent = response.message;
       document.getElementById('mensagem-cadastro').style.color = 'green';
     } catch (error) {
@@ -47,7 +47,7 @@ async function sendRequest(url, data) {
     const senha = document.getElementById('senha-login').value;
   
     try {
-      const response = await sendRequest('http://localhost:5000/login', { email, senha });
+      const response = await sendRequest('http://localhost:3000/login', { email, senha });
       document.getElementById('mensagem-login').textContent = response.message;
       document.getElementById('mensagem-login').style.color = 'green';
   
