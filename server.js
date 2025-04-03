@@ -14,7 +14,7 @@ dotenv.config();
 const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'Z5R2M9IQ', // Substitua pela sua senha real
+  password: '1234', // Substitua pela sua senha real
   database: 'postagem',
   waitForConnections: true,
   connectionLimit: 10,

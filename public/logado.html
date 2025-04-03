@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área Logada</title>
+    <link rel="stylesheet" href="logado.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo à área logada!</h1>
+        <p>Você está autenticado.</p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Verificar se o usuário está autenticado
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html'; // Redireciona para a página de login
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>
