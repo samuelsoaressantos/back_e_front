@@ -30,7 +30,7 @@ function showMessage(elementId, message, color) {
 
 // Redirecionar para a página index.html
 function redirectToIndex() {
-  window.location.href = 'index.html'; // Redireciona para index.html após sucesso
+  window.location.href = 'logado.html'; // Redireciona para index.html após sucesso
 }
 
 // Cadastro de usuário
@@ -73,14 +73,18 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
 
   try {
     const response = await sendRequest('http://localhost:3000/login', { email, senha });
-    showMessage('mensagem-login', response.message, 'green');
+    console.log(response); // Debug no console
+    if (response.token) {
+        // Armazena o token no localStorage
+        localStorage.setItem('token', response.token);
 
-    // Exibe o token JWT após login bem-sucedido
-    alert(`Token JWT: ${response.token}`);
-    
-    // Redireciona para a página index após sucesso
-    redirectToIndex();
-  } catch (error) {
+        // Redireciona para a página logada
+        window.location.href = 'logado.html';
+    } else {
+        // Exibe mensagem de erro se não receber um token válido
+        showMessage('mensagem-login', response.message || 'Erro no login', 'red');
+    }
+} catch (error) {
     showMessage('mensagem-login', error.message, 'red');
-  }
-});
+}
+

@@ -8,7 +8,7 @@ const router = express.Router();
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'Z5R2M9IQ',
+    password: '1234',
     database: 'postagem',
     waitForConnections: true,
     connectionLimit: 10,

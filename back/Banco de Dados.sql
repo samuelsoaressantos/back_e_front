@@ -39,8 +39,8 @@ CREATE TABLE votos (
 
 INSERT INTO usuarios (nome, senha, email) VALUES
 ('admin', '1234', 'admin@admin');
-INSERT INTO posts (titulo, imagem, localizacao) VALUES
-('Prato Típico Mineiro', 'prato_mineiro.jpg', 'Belo Horizonte - MG'),
- ('Feijoada Completa', 'feijoada.jpg', 'Rio de Janeiro - RJ');
+
+INSERT INTO usuarios (nome, senha, email) VALUES
+('teste', '2311', 'teste@teste');
 
 
