@@ -1,41 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área Logada</title>
-    <link rel="stylesheet" href="logado.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Postagens de Pets</title>
+  <link rel="stylesheet" href="logado.css"/>
 </head>
 <body>
-    <div class="container">
-        <h1>Bem-vindo à área logada!</h1>
-        <p>Você está autenticado.</p>
-        <button onclick="logout()">Logout</button>
-    </div>
+  <div class="container">
+    <h1>Postagens de Pets</h1>
+    <div id="posts-container"></div>
+  </div>
 
-    <script>
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Evita que o formulário recarregue a página
-    
-            const email = document.getElementById('email').value;
-            const senha = document.getElementById('senha').value;
-    
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, senha })
-            });
-    
-            const data = await response.json();
-    
-            if (response.ok) {
-                localStorage.setItem('token', data.token); // Salva o token no localStorage
-                window.location.href = 'logado.html'; // Redireciona para a área logada
-            } else {
-                alert(data.message); // Exibe erro (ex: "Senha incorreta")
-            }
-        });
-    </script>
-    
+  <script>
+    const posts = [
+      {
+        id: 1,
+        titulo: "Passeio no parque",
+        imagem: "https://placekitten.com/400/250",
+        localizacao: "São Paulo - SP",
+        comentarios: []
+      },
+      {
+        id: 2,
+        titulo: "Cachorro no sol",
+        imagem: "https://place-puppy.com/400x250",
+        localizacao: "Rio de Janeiro - RJ",
+        comentarios: []
+      }
+    ];
+
+    function renderPosts() {
+      const container = document.getElementById('posts-container');
+      container.innerHTML = '';
+
+      posts.forEach(post => {
+        const postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+
+        postDiv.innerHTML = `
+          <h2>${post.titulo}</h2>
+          <img src="${post.imagem}" alt="Imagem do post">
+          <p><strong>Localização:</strong> ${post.localizacao}</p>
+          
+          <div class="botoes">
+            <button onclick="likePost(${post.id})">👍 Curtir</button>
+            <button onclick="dislikePost(${post.id})">👎 Não curtir</button>
+          </div>
+
+          <div class="comentario-box">
+            <textarea id="comentario-${post.id}" rows="2" placeholder="Escreva um comentário..."></textarea>
+            <button onclick="adicionarComentario(${post.id})">Comentar</button>
+          </div>
+
+          <div id="comentarios-${post.id}" class="comentarios">
+            <h4>Comentários:</h4>
+          </div>
+        `;
+
+        container.appendChild(postDiv);
+      });
+    }
+
+    function likePost(postId) {
+      alert(`Você curtiu o post #${postId}`);
+    }
+
+    function dislikePost(postId) {
+      alert(`Você não curtiu o post #${postId}`);
+    }
+
+    function adicionarComentario(postId) {
+      const textarea = document.getElementById(`comentario-${postId}`);
+      const texto = textarea.value.trim();
+
+      if (texto === '') {
+        alert('Digite um comentário antes de enviar.');
+        return;
+      }
+
+      const post = posts.find(p => p.id === postId);
+      post.comentarios.push(texto);
+
+      const comentariosDiv = document.getElementById(`comentarios-${postId}`);
+      const novoComentario = document.createElement('p');
+      novoComentario.textContent = texto;
+      comentariosDiv.appendChild(novoComentario);
+
+      textarea.value = '';
+    }
+
+    renderPosts();
+  </script>
 </body>
 </html>

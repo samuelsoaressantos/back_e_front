@@ -1,7 +1,7 @@
 // Função para realizar a requisição POST com a API
 async function sendRequest(url, data) {
   try {
-    const response = await fetch(url, {
+     const response = await fetch( url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,9 +50,11 @@ document.getElementById('form-cadastro').addEventListener('submit', async (e) =>
   try {
     const response = await sendRequest('http://localhost:3000/cadastro', { nome, email, senha });
     showMessage('mensagem-cadastro', response.message, 'green');
-    
-    // Redireciona para a página index após sucesso
-    redirectToIndex();
+  
+    // Redireciona para a página logado.html após sucesso
+    setTimeout(() => {
+      window.location.href = '/index.html';
+    }, 1500); // Espera 1,5 segundos para mostrar a mensagem antes de redirecionar
   } catch (error) {
     showMessage('mensagem-cadastro', error.message, 'red');
   }
@@ -75,16 +77,16 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     const response = await sendRequest('http://localhost:3000/login', { email, senha });
     console.log(response); // Debug no console
     if (response.token) {
-        // Armazena o token no localStorage
-        localStorage.setItem('token', response.token);
+      // Armazena o token no localStorage
+      localStorage.setItem('token', response.token);
 
-        // Redireciona para a página logada
-        window.location.href = 'logado.html';
+      // Redireciona para a página logada
+      window.location.href = 'logado.html';
     } else {
-        // Exibe mensagem de erro se não receber um token válido
-        showMessage('mensagem-login', response.message || 'Erro no login', 'red');
+      // Exibe mensagem de erro se não receber um token válido
+      showMessage('mensagem-login', response.message || 'Erro no login', 'red');
     }
-} catch (error) {
+  } catch (error) {
     showMessage('mensagem-login', error.message, 'red');
-}
-
+  }
+});

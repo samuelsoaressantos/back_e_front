@@ -4,7 +4,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "ipabinha"; // Usando o JWT_SECRET para ambas as operações
+const JWT_SECRET = process.env.JWT_SECRET || "ipabinha";
+
 // Conexão com o banco MySQL usando Pool de Conexões
 const db = mysql.createPool({
     host: 'localhost',
@@ -21,7 +22,6 @@ router.post('/cadastro', async (req, res) => {
     const { nome, email, senha } = req.body;
 
     try {
-        // Verificar se o email já está cadastrado
         const [rows] = await db.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
         if (rows.length > 0) {
             return res.status(400).json({ message: 'Email já cadastrado' });
@@ -31,10 +31,10 @@ router.post('/cadastro', async (req, res) => {
         const hashSenha = await bcrypt.hash(senha, salt);
 
         const query = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
-        await db.execute(query, [nome, email, hashSenha]);
+        const [result] = await db.execute(query, [nome, email, hashSenha]);
 
-        // Gerar Token JWT após o cadastro
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+        // Gerar token com o ID retornado pelo insert
+        const token = jwt.sign({ id: result.insertId }, JWT_SECRET, { expiresIn: '1h' });
 
         res.status(201).json({ message: 'Usuário registrado com sucesso', token });
     } catch (err) {
@@ -48,24 +48,19 @@ router.post('/login', async (req, res) => {
     const { email, senha } = req.body;
 
     try {
-        // Buscar usuário pelo email
         const query = 'SELECT * FROM usuarios WHERE email = ?';
         const [rows] = await db.execute(query, [email]);
 
-        // Verifica se o usuário existe
         if (rows.length === 0) {
             return res.status(404).json({ message: 'Usuário não encontrado' });
         }
 
         const user = rows[0];
-
-        // Comparar senha com hash armazenado
         const senhaValida = await bcrypt.compare(senha, user.senha);
         if (!senhaValida) {
             return res.status(400).json({ message: 'Senha incorreta' });
         }
 
-        // Gerar token JWT
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
         res.status(200).json({ message: 'Login realizado com sucesso', token });
