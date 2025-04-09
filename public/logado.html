@@ -1,17 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Postagens de Pets</title>
-  <link rel="stylesheet" href="logado.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog de Posts</title>
+  <!-- Opcional: vincule o CSS externo se desejar -->
+  <!-- <link rel="stylesheet" href="styles.css"> -->
+  <style>
+    /* Estilo básico embutido para garantir funcionamento sem CSS externo */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    #posts-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .post {
+      background-color: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .post img {
+      max-width: 100%;
+      height: auto;
+    }
+    .post textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    .post button {
+      padding: 8px 12px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Postagens de Pets</h1>
-    <div id="posts-container"></div>
-  </div>
+  <button id="criar-post-btn">Criar Post</button>
 
+<!-- Formulário de criação de post (invisível inicialmente) -->
+<div id="formulario-post" style="display: none;">
+  <h2>Criar Novo Post</h2>
+  <input type="text" id="titulo-post" placeholder="Título" required />
+  <input type="text" id="imagem-post" placeholder="URL da Imagem" required />
+  <input type="text" id="localizacao-post" placeholder="Localização" required />
+  <button id="salvar-post-btn">Salvar Post</button>
+  <button id="cancelar-post-btn">Cancelar</button>
+</div>
+
+  <div id="posts-container"></div>
+
+  <!-- Vinculando o script externo -->
   <script src="logado.js"></script>
 </body>
 </html>

@@ -1,27 +1,24 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
 
-const router = express.Router();
-
-// Conexão com o banco de dados
+// Configuração do pool de conexão com o banco de dados
 const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: '1234',
+  password: '1234', // Substitua pela sua senha real
   database: 'postagem',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
 });
 
-// Rota GET /posts
-router.get('/posts', async (req, res) => {
+const router = express.Router();
+
+// Rota GET /posts para buscar todos os posts
+router.get('/post', async (req, res) => {
   try {
-    const [rows] = await db.execute('SELECT * FROM posts');
-    res.status(200).json(rows);
+    const [rows] = await db.execute('SELECT * FROM post');
+    res.json(rows);
   } catch (err) {
-    console.error('Erro ao buscar posts:', err);
-    res.status(500).json({ message: 'Erro ao buscar posts no banco de dados' });
+    console.error('Erro ao buscar post:', err);
+    res.status(500).json({ error: 'Erro ao buscar post' });
   }
 });
 

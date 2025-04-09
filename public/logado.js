@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Carregar posts
 async function carregarPosts() {
   try {
-    const response = await fetch(`${API_URL}/posts`); // rota GET /posts (você ainda vai precisar criar essa no backend)
+    const response = await fetch(`${API_URL}/post`);
     const posts = await response.json();
 
     const container = document.getElementById('posts-container');
@@ -29,16 +29,15 @@ async function carregarPosts() {
 
       container.appendChild(postDiv);
     });
-
   } catch (err) {
-    console.error('Erro ao carregar posts:', err);
+    console.error('Erro ao carregar post:', err);
   }
 }
 
 // Comentar em post
 async function comentar(postId) {
   const texto = document.getElementById(`comentario-${postId}`).value;
-  const usuario_id = getUsuarioId(); // Função que você precisa implementar
+  const usuario_id = getUsuarioId();
 
   if (!texto || !usuario_id) return alert('Comentário vazio ou usuário não identificado');
 
@@ -58,7 +57,7 @@ async function comentar(postId) {
 
 // Curtir ou não curtir
 async function votar(postId, tipo) {
-  const usuario_id = getUsuarioId(); // mesma coisa aqui
+  const usuario_id = getUsuarioId();
 
   try {
     const response = await fetch(`${API_URL}/votos`, {
@@ -74,7 +73,7 @@ async function votar(postId, tipo) {
   }
 }
 
-// Essa função você pode adaptar para pegar o id do usuário logado
+// Função para pegar o ID do usuário logado
 function getUsuarioId() {
   const token = localStorage.getItem('token');
   if (!token) return null;
@@ -82,3 +81,49 @@ function getUsuarioId() {
   const payload = JSON.parse(atob(token.split('.')[1]));
   return payload.id;
 }
+
+// Exibir o formulário de criação de post
+document.getElementById('criar-post-btn').addEventListener('click', () => {
+  document.getElementById('formulario-post').style.display = 'block';
+  document.getElementById('criar-post-btn').style.display = 'none'; // Oculta o botão "Criar Post"
+});
+
+// Cancelar o formulário
+document.getElementById('cancelar-post-btn').addEventListener('click', () => {
+  document.getElementById('formulario-post').style.display = 'none';
+  document.getElementById('criar-post-btn').style.display = 'inline'; // Mostra o botão "Criar Post"
+});
+
+// Função para salvar o post
+document.getElementById('salvar-post-btn').addEventListener('click', async () => {
+  const titulo = document.getElementById('titulo-post').value;
+  const imagem = document.getElementById('imagem-post').value;
+  const localizacao = document.getElementById('localizacao-post').value;
+  const usuario_id = getUsuarioId();
+
+  // Validação básica
+  if (!titulo || !imagem || !localizacao || !usuario_id) {
+    return alert('Preencha todos os campos corretamente!');
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/post`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        titulo,
+        imagem,
+        localizacao,
+        usuario_id
+      })
+    });
+
+    const result = await response.json();
+    alert(result.message || 'Post criado com sucesso!');
+    document.getElementById('formulario-post').style.display = 'none'; // Oculta o formulário após o post ser criado
+    document.getElementById('criar-post-btn').style.display = 'inline'; // Mostra o botão "Criar Post"
+    carregarPosts(); // Recarregar a lista de posts
+  } catch (err) {
+    console.error('Erro ao criar post:', err);
+  }
+});

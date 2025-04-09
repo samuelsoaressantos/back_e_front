@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import mysql from 'mysql2/promise';
 import rotas from './back/routes/login.js';
+import postRoutes from './back/routes/post.js';
+import userRoutes from './back/routes/private.js';
 import path from 'path';  // Módulo path para manipulação de caminhos de diretórios
 import { fileURLToPath } from 'url'; // Módulo para trabalhar com URL no contexto de módulos ES
 
@@ -38,11 +40,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', rotas);
-
+app.use(postRoutes);
+app.use(userRoutes);
 // Rota de Login (autenticação)
 app.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 
+  
   try {
     // Verificar se o email existe no banco de dados
     const [rows] = await db.execute('SELECT * FROM usuarios WHERE email = ?', [email]);

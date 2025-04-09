@@ -17,6 +17,7 @@ const db = mysql.createPool({
 
 const JWT_SECRET = process.env.JWT_SECRET || "ipabinha";  // Defina seu segredo JWT
 console.log("JWT_SECRET:", JWT_SECRET); // Verifique se o valor está sendo exibido corretamente
+
 // Rota para listar usuários
 router.get('/list-usuarios', async (req, res) => {
     try {
@@ -31,17 +32,21 @@ router.get('/list-usuarios', async (req, res) => {
     }
 });
 
-router.post('/posts', async (req, res) => {
+// Rota para criar um post
+router.post('/post', async (req, res) => {
     const { titulo, imagem, localizacao, usuario_id } = req.body;
 
+    // Verifica se todos os campos necessários estão presentes
     if (!titulo || !imagem || !localizacao || !usuario_id) {
         return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
     }
 
     try {
-        const query = 'INSERT INTO posts (titulo, imagem, localizacao) VALUES (?, ?, ?)';
-        const [result] = await db.execute(query, [titulo, imagem, localizacao]);
+        // Altere a consulta para incluir o usuario_id ao salvar o post no banco de dados
+        const query = 'INSERT INTO posts (titulo, imagem, localizacao, usuario_id) VALUES (?, ?, ?, ?)';
+        const [result] = await db.execute(query, [titulo, imagem, localizacao, usuario_id]);
 
+        // Resposta com sucesso, incluindo o ID do post criado
         res.status(201).json({ message: 'Post criado com sucesso', postId: result.insertId });
     } catch (err) {
         console.error('Erro ao criar post:', err);
@@ -49,6 +54,7 @@ router.post('/posts', async (req, res) => {
     }
 });
 
+// Rota para adicionar um comentário em um post
 router.post('/comentarios', async (req, res) => {
     const { post_id, usuario_id, texto } = req.body;
 
@@ -67,7 +73,7 @@ router.post('/comentarios', async (req, res) => {
     }
 });
 
-
+// Rota para registrar votos em um post (like/dislike)
 router.post('/votos', async (req, res) => {
     const { post_id, usuario_id, tipo } = req.body;
 
@@ -95,6 +101,5 @@ router.post('/votos', async (req, res) => {
         res.status(500).json({ message: 'Erro ao votar' });
     }
 });
-
 
 export default router;

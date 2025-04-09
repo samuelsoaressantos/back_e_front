@@ -1,63 +1,91 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 10px;
-  }
-  
-  h1 {
-    text-align: center;
-    color: #333;
-  }
-  
+  background-color: #f4f4f4;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+#posts-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.post {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.post img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.post p {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.post textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.post button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  transition: background-color 0.3s;
+}
+
+.post button:hover {
+  opacity: 0.9;
+}
+
+button:nth-child(5) {
+  background-color: #28a745;
+  color: white;
+}
+
+button:nth-child(6) {
+  background-color: #dc3545;
+  color: white;
+}
+
+button:nth-child(4) {
+  background-color: #007bff;
+  color: white;
+}
+
+@media (max-width: 600px) {
   .post {
-    border-bottom: 1px solid #ccc;
-    padding: 15px 0;
+    padding: 15px;
   }
-  
-  .post img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
+
+  .post button {
+    width: 100%;
+    margin: 5px 0;
   }
-  
-  .post h2 {
-    margin-bottom: 10px;
-    color: #444;
-  }
-  
-  .botoes {
-    margin-top: 10px;
-  }
-  
-  .botoes button {
-    margin-right: 10px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .botoes button:hover {
-    opacity: 0.8;
-  }
-  
-  .botoes button:first-child {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .botoes button:last-child {
-    background-color: #f44336;
-    color: white;
-  }
-  
+}
