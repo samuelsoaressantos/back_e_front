@@ -44,14 +44,14 @@
   <button id="criar-post-btn">Criar Post</button>
 
 <!-- Formulário de criação de post (invisível inicialmente) -->
-<div id="formulario-post" style="display: none;">
-  <h2>Criar Novo Post</h2>
-  <input type="text" id="titulo-post" placeholder="Título" required />
-  <input type="text" id="imagem-post" placeholder="URL da Imagem" required />
-  <input type="text" id="localizacao-post" placeholder="Localização" required />
-  <button id="salvar-post-btn">Salvar Post</button>
-  <button id="cancelar-post-btn">Cancelar</button>
-</div>
+<form id="formulario-post" style="display:none;">
+  <input type="text" id="titulo-post" placeholder="Título do post" required>
+  <input type="text" id="localizacao-post" placeholder="Localização" required>
+  <input type="file" id="imagem-post" accept="image/*" required> <!-- Campo para selecionar a imagem -->
+  <button type="button" id="salvar-post-btn">Salvar Post</button>
+  <button type="button" id="cancelar-post-btn">Cancelar</button>
+</form>
+
 
   <div id="posts-container"></div>
 

@@ -97,7 +97,7 @@ document.getElementById('cancelar-post-btn').addEventListener('click', () => {
 // Função para salvar o post
 document.getElementById('salvar-post-btn').addEventListener('click', async () => {
   const titulo = document.getElementById('titulo-post').value;
-  const imagem = document.getElementById('imagem-post').value;
+  const imagem = document.getElementById('imagem-post').files[0]; // Obtém o arquivo selecionado
   const localizacao = document.getElementById('localizacao-post').value;
   const usuario_id = getUsuarioId();
 
@@ -106,16 +106,16 @@ document.getElementById('salvar-post-btn').addEventListener('click', async () =>
     return alert('Preencha todos os campos corretamente!');
   }
 
+  const formData = new FormData();
+  formData.append('titulo', titulo);
+  formData.append('imagem', imagem); // Anexa o arquivo de imagem
+  formData.append('localizacao', localizacao);
+  formData.append('usuario_id', usuario_id);
+
   try {
     const response = await fetch(`${API_URL}/post`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        titulo,
-        imagem,
-        localizacao,
-        usuario_id
-      })
+      body: formData // Envia os dados como FormData
     });
 
     const result = await response.json();
@@ -127,3 +127,4 @@ document.getElementById('salvar-post-btn').addEventListener('click', async () =>
     console.error('Erro ao criar post:', err);
   }
 });
+
